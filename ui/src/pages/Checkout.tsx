@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { SHIPPING, money, priceOf, shippingFor, useCart, vatIncluded } from "../lib/cart";
 import type { CartItem, ShippingMethod } from "../lib/cart";
 import PaymentScreen from "./PaymentScreen";
-import { placeOrder } from "../lib/orders";
+import { placeOrder } from "../lib/api/orders";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const d = (s: number) => ({ ["--d" as string]: `${s}s` });

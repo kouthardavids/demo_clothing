@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getProducts, loadProducts } from "../lib/products";
-import type { Product } from "../lib/products";
+import { getProducts, loadProducts } from "../lib/api/products";
+import type { Product } from "../lib/api/products";
 import { useTryOn } from "./Tryon";
 import ClosetLink from "./links/Closetlink";
 import { useCart } from "../lib/cart";

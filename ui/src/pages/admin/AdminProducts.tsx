@@ -7,10 +7,10 @@ import {
     updateProductApi,
     deleteProductApi,
     refreshProducts,
-} from "../../lib/products";
-import type { Product, ProductInput } from "../../lib/products";
+} from "../../lib/api/products";
+import type { Product, ProductInput } from "../../lib/api/products";
 import { money } from "../../lib/cart";
-import { LEVEL_COLOR, LEVEL_LABEL, colorName, levelOf } from "../../lib/stockData";
+import { LEVEL_COLOR, LEVEL_LABEL, colorName, levelOf } from "../../lib/api/stockData";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const PAGE_SIZE = 8;

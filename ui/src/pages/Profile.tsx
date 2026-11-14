@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { ChangeEvent, FormEvent, ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getProduct } from "../lib/products";
+import { getProduct } from "../lib/api/products";
 import { money, useCart } from "../lib/cart";
 import { useAccount } from "../lib/profile";
 import type { Address, OrderRecord } from "../lib/profile";

@@ -81,6 +81,18 @@ async function cropFace(buf: Buffer, r: Rect) {
 
 const ORDINAL = ["first", "second", "third", "fourth", "fifth"];
 
+// Which part of the body a garment covers, based on its label
+type Slot = "top" | "bottom" | "full" | "head" | "other";
+
+const slotOf = (label: string): Slot => {
+    const l = label.toLowerCase();
+    if (/hijab|scarf|headscarf/.test(l)) return "head";
+    if (/dress|abaya|jumpsuit|romper|gown/.test(l)) return "full";
+    if (/skirt|pant|jean|trouser|short|legging/.test(l)) return "bottom";
+    if (/shirt|tee|top|blouse|sweater|hoodie|jumper|cardigan|jacket|vest/.test(l)) return "top";
+    return "other";
+};
+
 async function sideBySide(a: Buffer, b: Buffer) {
     const [pa, pb] = await Promise.all([shrink(a), shrink(b)]);
     const [ma, mb] = await Promise.all([sharp(pa).metadata(), sharp(pb).metadata()]);
@@ -137,9 +149,14 @@ app.post(
             if (faceRect) faceRef = await cropFace(person.buffer, faceRect);
 
             type Item = { buf: Buffer; label: string };
+
+            // Work out which body slots are being replaced BEFORE any items get merged side by side
+            const originalLabels = clothes.map((_, i) => labels[i] ?? "clothing item");
+            const slots = new Set<Slot>(originalLabels.map(slotOf));
+
             let items: Item[] = clothes.map((f, i) => ({
                 buf: f.buffer,
-                label: labels[i] ?? "clothing item",
+                label: originalLabels[i],
             }));
 
             const reserved = faceRef ? 2 : 1;
@@ -169,6 +186,24 @@ HIJAB: The ${ORDINAL[hijabIdx + 1]} image is a hijab (headscarf). Wrap it over t
 covers their hair, ears and neck, with the face fully visible. The hijab replaces the visible hair.
 `;
 
+            // Everything the new items do NOT cover must stay exactly as in the first image
+            const replacesTop = slots.has("top") || slots.has("full");
+            const replacesBottom = slots.has("bottom") || slots.has("full");
+
+            const keepParts: string[] = [];
+            if (!replacesBottom) keepParts.push("trousers/skirt/lower-body clothing");
+            if (!replacesTop) keepParts.push("top/upper-body clothing");
+            if (!slots.has("head"))
+                keepParts.push("hijab/headwear (keep its exact shape, drape, folds, colour and position over the shoulder)");
+            keepParts.push("shoes, belts and accessories");
+
+            const keepRule = `
+UNCHANGED AREAS: Everything in the first image outside the replaced garment stays exactly as it appears in the first image,
+including ${keepParts.join(", ")}.
+The new garment sits on top of the existing clothing. Below its hem, the existing clothing stays fully visible with its
+original colour, fabric, waistband, buttons, pockets and stitching.
+`;
+
             const faceOrdinal = ORDINAL[items.length + 1];
             const faceRule = faceRef
                 ? `
@@ -185,11 +220,10 @@ The first image is the person and is the definitive reference for identity and p
 ${imageList}
 ${faceRule}
 CLOTHING (follow exactly):
-The person must wear exactly these garments and nothing else: ${garmentList}.
-Keep every garment's type exactly as shown in its reference image. A skirt must stay a skirt, pants must stay pants,
-a dress must stay a dress. Never swap one garment type for another and never add extra garments such as pants
-under a skirt. Reproduce each item's original color, pattern, fabric, texture, length and shape as accurately
-as possible, and fit the garments naturally.
+Replace only the garment(s) that correspond to these references: ${garmentList}.
+Keep each new garment's type exactly as shown in its reference image. Reproduce its original colour,
+pattern, fabric, texture, length and shape, and fit it naturally on the person.
+${keepRule}
 ${hijabRule}
 IDENTITY PRESERVATION IS THE HIGHEST PRIORITY:
 Keep the face exactly as it is in the first image. Do not generate a new face, and do not alter eye shape,

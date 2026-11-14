@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { getProducts, loadProducts } from "../lib/products";
-import type { Product } from "../lib/products";
+import { getProducts, loadProducts } from "../lib/api/products";
+import type { Product } from "../lib/api/products";
 
 function useInView<T extends Element>(threshold: number) {
     const ref = useRef<T>(null);

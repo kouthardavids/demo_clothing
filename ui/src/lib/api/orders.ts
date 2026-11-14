@@ -1,5 +1,5 @@
-import { priceOf } from "./cart";
-import type { CartItem, ShippingMethod } from "./cart";
+import { priceOf } from "../cart";
+import type { CartItem, ShippingMethod } from "../cart";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

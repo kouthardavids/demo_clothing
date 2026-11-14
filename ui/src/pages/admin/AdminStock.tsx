@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { getProducts, loadProducts } from "../../lib/products";
-import type { Product } from "../../lib/products";
+import { getProducts, loadProducts } from "../../lib/api/products";
+import type { Product } from "../../lib/api/products";
 import {
     LEVEL_COLOR, LEVEL_LABEL, LOW_PRODUCT, LOW_VARIANT,
     buildStock, colorName, levelOf,
-} from "../../lib/stockData";
-import type { Level, StockProduct } from "../../lib/stockData";
+} from "../../lib/api/stockData";
+import type { } from "../../lib/api/stockData";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const d = (s: number) => ({ ["--d" as string]: `${s}s` });

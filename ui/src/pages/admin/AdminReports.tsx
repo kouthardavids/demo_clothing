@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { money } from "../../lib/cart";
-import { RANGES, fetchReport } from "../../lib/reportData";
-import type { RangeKey, Report, StockStatus } from "../../lib/reportData";
+import { RANGES, fetchReport } from "../../lib/api/reportData";
+import type { RangeKey, Report, StockStatus } from "../../lib/api/reportData";
 
 const d = (s: number) => ({ ["--d" as string]: `${s}s` });
 const tooltipStyle = { borderRadius: 12, border: "1px solid #e5e5e5", fontSize: 12, boxShadow: "none" };

@@ -1,7 +1,7 @@
 // Try on actions
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { getProduct } from "../lib/products";
+import { getProduct } from "../lib/api/products";
 
 export type Outfit = {
     id: string;

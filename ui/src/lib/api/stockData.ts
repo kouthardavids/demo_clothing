@@ -1,4 +1,4 @@
-import type { Product } from "./products";
+import type { Product } from "./api/products";
 
 export type VariantStock = { size: string; color: string; stock: number };
 export type Level = "out" | "low" | "ok";

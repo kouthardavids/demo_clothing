@@ -1,5 +1,5 @@
 import { getProduct } from "./products";
-import type { FaceRect } from "./detectFace";
+import type { FaceRect } from "../detectFace";
 
 const API_URL: string =
     (import.meta as any).env?.VITE_API_URL;

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { money } from "../../lib/cart";
-import { fetchOrders } from "../../lib/orders";
-import type { AdminOrder } from "../../lib/orders";
+import { fetchOrders } from "../../lib/api/orders";
+import type { AdminOrder } from "../../lib/api/orders";
 
 const PAGE_SIZE = 8;
 const d = (s: number) => ({ ["--d" as string]: `${s}s` });

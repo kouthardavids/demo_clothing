@@ -6,10 +6,10 @@ import {
     ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
 import { money } from "../../lib/cart";
-import { getProducts, loadProducts } from "../../lib/products";
-import type { Product } from "../../lib/products";
-import { fetchOrders } from "../../lib/orders";
-import type { AdminOrder } from "../../lib/orders";
+import { getProducts, loadProducts } from "../../lib/api/products";
+import type { Product } from "../../lib/api/products";
+import { fetchOrders } from "../../lib/api/orders";
+import type { AdminOrder } from "../../lib/api/orders";
 
 const d = (s: number) => ({ ["--d" as string]: `${s}s` });
 const tooltipStyle = { borderRadius: 12, border: "1px solid #e5e5e5", fontSize: 12, boxShadow: "none" };

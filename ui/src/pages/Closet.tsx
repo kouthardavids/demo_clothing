@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { getProduct } from "../lib/products";
-import type { Product } from "../lib/products";
-import { generateLook, MAX_CLOTHES } from "../lib/tryon";
+import { getProduct } from "../lib/api/products";
+import type { Product } from "../lib/api/products";
+import { generateLook, MAX_CLOTHES } from "../lib/api/tryon";
 import { detectFace } from "../lib/detectFace";
 import { useTryOn } from "./Tryon";
 import type { Outfit } from "./Tryon";

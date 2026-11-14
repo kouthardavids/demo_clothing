@@ -2,8 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { getProduct } from "./products";
-import type { Product } from "./products";
+import { getProduct } from "./api/products";
+import type { Product } from "./api/products";
 
 export type CartLine = { id: number; size: string; color: string; qty: number };
 export type CartItem = { line: CartLine; product: Product; key: string };
