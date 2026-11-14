@@ -7,7 +7,7 @@ import {
     LEVEL_COLOR, LEVEL_LABEL, LOW_PRODUCT, LOW_VARIANT,
     buildStock, colorName, levelOf,
 } from "../../lib/api/stockData";
-import type { } from "../../lib/api/stockData";
+import type { Level, StockProduct } from "../../lib/api/stockData";
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 const d = (s: number) => ({ ["--d" as string]: `${s}s` });

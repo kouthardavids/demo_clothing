@@ -250,8 +250,10 @@ export const buildReport = async (range: RangeKey) => {
 
 /* ---------- Helpers ---------- */
 
-function groupWeekly<T extends { date: Date }>(daily: T[]): T[] {
-    const out: T[] = [];
+type Point = Totals & { date: Date; label: string };
+
+function groupWeekly(daily: Point[]): Point[] {
+    const out: Point[] = [];
     for (let i = 0; i < daily.length; i += 7) {
         const chunk = daily.slice(i, i + 7);
         out.push(chunk.reduce((a, b) => sumInto(a, b)));
@@ -259,8 +261,8 @@ function groupWeekly<T extends { date: Date }>(daily: T[]): T[] {
     return out;
 }
 
-function groupMonthly<T extends { date: Date }>(daily: T[]): T[] {
-    const groups = new Map<string, T[]>();
+function groupMonthly(daily: Point[]): Point[] {
+    const groups = new Map<string, Point[]>();
     for (const d of daily) {
         const key = `${d.date.getUTCFullYear()}-${d.date.getUTCMonth()}`;
         groups.set(key, [...(groups.get(key) ?? []), d]);
@@ -268,9 +270,9 @@ function groupMonthly<T extends { date: Date }>(daily: T[]): T[] {
     return [...groups.values()].map((g) => g.reduce((a, b) => sumInto(a, b)));
 }
 
-function sumInto<T extends Totals & { date: Date }>(a: T, b: T): T {
+function sumInto(a: Point, b: Point): Point {
     const total = sum(a, b);
-    return { ...total, date: a.date, label: a.label } as T;
+    return { ...total, date: a.date, label: a.label };
 }
 
 /* ---------- Product aggregation ---------- */
