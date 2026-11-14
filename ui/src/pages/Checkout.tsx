@@ -335,7 +335,11 @@ export default function Checkout() {
         );
     }
 
-    const shippingOptions = (Object.keys(SHIPPING) as ShippingMethod[]).map((m) => ({ m, price: shippingFor(m, subtotal), ...SHIPPING[m] }));
+    const shippingOptions = (Object.keys(SHIPPING) as ShippingMethod[]).map((m) => ({
+        ...SHIPPING[m],
+        m,
+        price: shippingFor(m, subtotal),
+    }));
 
     return (
         <div className="min-h-screen bg-white font-sans text-neutral-900">

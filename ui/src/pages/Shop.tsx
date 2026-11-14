@@ -20,7 +20,7 @@ import { FilterIcon } from "../assets/icons/icons";
 
 import { SHOP_CSS } from "../styles/index";
 
-const NAV_LINKS = ["Home", "Collection", "Contact"] as const;
+const NAV_LINKS = ["Home", "Shop", "Collection", "Contact"] as const;
 const PAGE_SIZE = 8;
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 

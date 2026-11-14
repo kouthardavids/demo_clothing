@@ -577,7 +577,7 @@ function RelatedCard({ product }: { product: Product }) {
     );
 }
 
-function Related({ current, items }: { current: Product; items: Product[] }) {
+function Related({ items }: { current: Product; items: Product[] }) {
     const [ref, inView] = useInView<HTMLElement>(0.2);
     const scrollerRef = useRef<HTMLDivElement>(null);
     const [canPrev, setCanPrev] = useState(false);

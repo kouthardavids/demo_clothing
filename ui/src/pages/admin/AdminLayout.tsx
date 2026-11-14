@@ -26,7 +26,11 @@ const ChevronDown = () => (
     </svg>
 );
 
-const NAV = [
+type NavLink = { to: string; label: string; end?: boolean; icon: ReactNode };
+type NavGroup = { label: string; match: string; icon: ReactNode; children: { to: string; label: string }[] };
+type NavItem = NavLink | NavGroup;
+
+const NAV: NavItem[] = [
     {
         to: "/admin",
         label: "Dashboard",
