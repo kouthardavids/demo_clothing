@@ -8,6 +8,10 @@ import { useTryOn } from "./Tryon";
 import ClosetLink from "./links/Closetlink";
 import { useCart } from "../lib/cart";
 import BagLink from "./links/Baglink";
+import { neededMeasures } from "../lib/sizing";
+import type { Range } from "../lib/sizing";
+
+import FindMySize from "./FindMySize";
 
 import { PAGE_CSS } from "../styles";
 
@@ -43,10 +47,6 @@ function useInView<T extends Element>(threshold: number) {
 }
 
 const d = (s: number) => ({ ["--d" as string]: `${s}s` });
-
-/* ------------------------------------------------------------------ */
-/* Icons                                                               */
-/* ------------------------------------------------------------------ */
 
 const Svg = ({ children, size = 18, fill = "none" }: { children: ReactNode; size?: number; fill?: string }) => (
     <svg
@@ -250,6 +250,53 @@ function Gallery({ product }: { product: Product }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Size guide (built from the product's size chart)                    */
+/* ------------------------------------------------------------------ */
+
+function SizeGuide({ product }: { product: Product }) {
+    const rows = product.sizeChart.filter((r) => product.sizes.includes(r.size));
+    if (rows.length === 0) return null;
+
+    const cols = neededMeasures(rows);
+    const range = (r: Range | null) => (r ? `${r[0]} to ${r[1]}` : "N/A");
+
+    return (
+        <details className="group w-full max-w-sm">
+            <summary className="flex w-fit cursor-pointer list-none items-center gap-2 text-neutral-800 hover:text-neutral-500 [&::-webkit-details-marker]:hidden">
+                <Svg size={16}>
+                    <rect x="3" y="8" width="18" height="8" rx="1.5" />
+                    <path d="M7 8v3M11 8v4M15 8v3M19 8v4" />
+                </Svg>
+                Size guide
+            </summary>
+            <p className="mt-3 text-[11px] font-normal normal-case tracking-normal text-neutral-400">
+                Body measurements in cm.
+            </p>
+            <table className="mt-2 w-full text-left text-xs font-normal normal-case tracking-normal text-neutral-600">
+                <thead>
+                    <tr className="border-b border-neutral-200 text-neutral-900">
+                        <th className="py-1.5 font-medium">Size</th>
+                        {cols.map((m) => (
+                            <th key={m.key} className="font-medium">{m.label}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows.map((r) => (
+                        <tr key={r.size} className="border-b border-neutral-100">
+                            <td className="py-1.5 font-medium text-neutral-900">{r.size}</td>
+                            {cols.map((m) => (
+                                <td key={m.key}>{range(r[m.key])}</td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </details>
+    );
+}
+
+/* ------------------------------------------------------------------ */
 /* Buy box                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -265,6 +312,7 @@ function BuyBox({ product, onJumpTo }: { product: Product; onJumpTo: (tab: Tab) 
     const { addToCloset, inCloset } = useTryOn();
     const { addItem } = useCart();
     const saved = inCloset(product.id);
+    const [finder, setFinder] = useState(false);
 
     const maxQty = Math.max(1, Math.min(product.stock, 10));
     const soldOut = product.stock <= 0;
@@ -351,7 +399,14 @@ function BuyBox({ product, onJumpTo }: { product: Product; onJumpTo: (tab: Tab) 
 
                 {/* Size */}
                 <div className="mt-6">
-                    <p className="text-xs text-neutral-500">Size</p>
+                    <div className="flex items-center justify-between">
+                        <p className="text-xs text-neutral-500">Size</p>
+                        {product.sizeChart.length > 0 && (
+                            <button type="button" onClick={() => setFinder(true)} className="text-xs font-medium underline underline-offset-4 transition-colors hover:text-neutral-500">
+                                Find my size
+                            </button>
+                        )}
+                    </div>
                     <div
                         ref={sizeRef}
                         key={sizeError ? "err" : "ok"}
@@ -389,40 +444,8 @@ function BuyBox({ product, onJumpTo }: { product: Product; onJumpTo: (tab: Tab) 
                 </div>
 
                 <div className="mt-5 flex items-start justify-between gap-4 text-[11px] font-medium uppercase tracking-wide">
-                    <details className="group w-full max-w-xs">
-                        <summary className="flex w-fit cursor-pointer list-none items-center gap-2 text-neutral-800 hover:text-neutral-500 [&::-webkit-details-marker]:hidden">
-                            <Svg size={16}>
-                                <rect x="3" y="8" width="18" height="8" rx="1.5" />
-                                <path d="M7 8v3M11 8v4M15 8v3M19 8v4" />
-                            </Svg>
-                            Size guide
-                        </summary>
-                        <table className="mt-3 w-full text-left text-xs font-normal normal-case tracking-normal text-neutral-600">
-                            <thead>
-                                <tr className="border-b border-neutral-200 text-neutral-900">
-                                    <th className="py-1.5 font-medium">Size</th>
-                                    <th className="font-medium">Bust (cm)</th>
-                                    <th className="font-medium">Waist (cm)</th>
-                                    <th className="font-medium">Hips (cm)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {[
-                                    ["S", "84", "66", "90"],
-                                    ["M", "90", "72", "96"],
-                                    ["L", "96", "78", "102"],
-                                    ["XL", "102", "84", "108"],
-                                ].map((row) => (
-                                    <tr key={row[0]} className="border-b border-neutral-100">
-                                        {row.map((cell, i) => (
-                                            <td key={i} className="py-1.5">{cell}</td>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </details>
-                    <span className="flex shrink-0 items-center gap-1.5 text-neutral-800">
+                    <SizeGuide product={product} />
+                    <span className="ml-auto flex shrink-0 items-center gap-1.5 text-neutral-800">
                         <CheckIcon />
                         {stockText}
                     </span>
@@ -487,6 +510,17 @@ function BuyBox({ product, onJumpTo }: { product: Product; onJumpTo: (tab: Tab) 
                     <dd>{product.category}</dd>
                 </dl>
             </div>
+            {finder && (
+                <FindMySize
+                    product={product}
+                    onClose={() => setFinder(false)}
+                    onSelect={(s) => {
+                        setSize(s);
+                        setSizeError(false);
+                        setFinder(false);
+                    }}
+                />
+            )}
         </div>
     );
 }

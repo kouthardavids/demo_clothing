@@ -1,3 +1,6 @@
+import { toChart } from "../sizing";
+import type { SizeChartRow } from "../sizing";
+
 export type ProductVariant = {
     id: number;
     size: string;
@@ -27,6 +30,7 @@ export type Product = {
     variants: ProductVariant[];
     isActive: boolean;
     description: string;
+    sizeChart: SizeChartRow[];
 };
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -69,6 +73,7 @@ const mapRow = (r: any): Product => {
         })),
         isActive: r.is_active ?? true,
         description: r.description ?? "",
+        sizeChart: toChart(r.size_charts),
     };
 };
 

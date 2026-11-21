@@ -16,16 +16,16 @@ export type ProductInput = {
     active: boolean;
 };
 
-/* ---------- read ---------- */
 
 export const allProducts = async () => {
     const { data, error } = await supabase
         .from("products")
         .select(`
-            id, name, price_cents, old_price_cents, badge, is_active,
+            id, name, description, price_cents, old_price_cents, badge, is_active,
             categories(name),
             product_images(url, position),
-            product_variants(id, size, color, sku, stock)
+            product_variants(id, size, color, sku, stock),
+            size_charts(size, chest_min, chest_max, waist_min, waist_max, hips_min, hips_max, height_min, height_max)
         `)
         .eq("is_active", true)
         .order("id");
@@ -33,8 +33,6 @@ export const allProducts = async () => {
     if (error) throw new Error(error.message);
     return data;
 };
-
-/* ---------- write helpers ---------- */
 
 const slugify = (s: string) =>
     s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
